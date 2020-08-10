@@ -67,7 +67,6 @@ $("#release").on("click", function(){
 function updateCurrentStatus(user) {
     $("#current-status").show().empty().append(
         `<h4>` + user['given_name'] + ", " + user['family_name'] + `</h4>
-        <h4>UIN: ` + user['uin'] + `</h4>
         <p>Current Entry Status = ` + user['status'] + `</p>`
     );
 }
