@@ -14,6 +14,8 @@ from oic.oic.message import AuthorizationResponse, RegistrationResponse, ClaimsR
 from oic.utils.authn.client import CLIENT_AUTHN_METHOD
 from oic.utils.http_util import Redirect
 
+from REDCap_connection import set_REDCap_status
+from access_control_connection import lookup_access_status
 from user import User
 
 app = Flask(__name__)
@@ -71,7 +73,8 @@ def login():
           "response_type": "code",
           "scope": app.config["SCOPES"],
           "nonce": session["nonce"],
-          "redirect_uri":client.registration_response["redirect_uris"][0],
+          # "redirect_uri":client.registration_response["redirect_uris"][0],
+          "redirect_uri":app.config["REDIRECT_URIS"],
           "state":session["state"],
           "claims":claims_request
      }
@@ -111,7 +114,7 @@ def callback():
 @login_required
 def logout():
      logout_user()
-     return redirect(url_for("homepage"))
+     return "You have successfully logged out!"
 
 
 @app.route('/', methods=['GET'])
@@ -126,21 +129,23 @@ def homepage():
 @app.route('/search', methods=['POST'])
 def search():
      if current_user.is_authenticated:
-
           if request.get_json() and request.get_json()['uin']:
                uin = request.get_json()['uin']
+               status, data = lookup_access_status(uin)
+               if status:
+                    return {
+                         "user": {
+                              "uin": data['data']["uin"],
+                              "username": "NA",
+                              "given_name": "NA",
+                              "family_name": "NA",
+                              "status": data['data']["allowAccess"]
+                         }
+                    }
+               else:
+                    abort (500, data['message'])
           else:
                abort(400, 'UIN is a required field!')
-
-          # TODO connect to UIN search API endpoint; placeholder here
-          return {"user": {
-               "username":"cwang138",
-               "given_name":"Chen",
-               "family_name":"Wang",
-               "status":"Denied"
-               }
-          }
-
      else:
           abort(403, 'User not Authorized! Please login first.')
 
@@ -155,15 +160,21 @@ def quarantine():
                abort(400, 'UIN is a required field!')
 
           # TODO connect to UIN quarantine API endpoint; placeholder here
-          return {
-               "user": {
-                    "username": "cwang138",
-                    "given_name": "Chen",
-                    "family_name": "Wang",
-                    "status": "Denied"
+          REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="quarantine")
+          if not REDCap_status:
+               abort(500, REDCap_data['message'])
+          # elif not access_control_status:
+          #      abort(500, access_control_message)
+          else:
+               return {
+                    "user": {
+                         "uin": uin,
+                         "username": "NA",
+                         "given_name": "NA",
+                         "family_name": "NA",
+                         "status": "false"
+                    }
                }
-          }
-
      else:
           abort(403, 'User not Authorized! Please login first.')
 
@@ -178,14 +189,19 @@ def isolate():
                abort(400, 'UIN is a required field!')
 
           # TODO connect to UIN isolate API endpoint; placeholder here
-          return {
-               "user": {
-                    "username": "cwang138",
-                    "given_name": "Chen",
-                    "family_name": "Wang",
-                    "status": "Isolated"
+          REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="isolate")
+          if not REDCap_status:
+               abort(500, REDCap_data['data'])
+          else:
+               return {
+                    "user": {
+                         "uin": uin,
+                         "username": "NA",
+                         "given_name": "NA",
+                         "family_name": "NA",
+                         "status": "false"
+                    }
                }
-          }
 
      else:
           abort(403, 'User not Authorized! Please login first.')
@@ -201,14 +217,19 @@ def release():
                abort(400, 'UIN is a required field!')
 
           # TODO connect to UIN release API endpoint; placeholder here
-          return {
-               "user": {
-                    "username": "cwang138",
-                    "given_name": "Chen",
-                    "family_name": "Wang",
-                    "status": "Released"
+          REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="release")
+          if not REDCap_status:
+               abort(500, REDCap_data['data'])
+          else:
+               return {
+                    "user": {
+                         "uin": uin,
+                         "username": "NA",
+                         "given_name": "NA",
+                         "family_name": "NA",
+                         "status": "true"
+                    }
                }
-          }
 
      else:
           abort(403, 'User not Authorized! Please login first.')
@@ -218,3 +239,4 @@ def release():
 @app.route('/health')
 def health():
     return {'message': 'Healthy'}  # This will return as JSON by default with a 200 status code
+
