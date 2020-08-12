@@ -6,6 +6,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
 
     <!-- bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -55,6 +59,20 @@
   <button type="button" id="release" class="btn btn-success btn-lg">Release</button>
 </div>
 
+<!-- error modal -->
+<div id="error" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <a href="mailto:Test-Compliance@mx.uillinois.edu?subject = Report Error" target="_blank">
+                    <button class="btn btn-primary">Report the Error</button>
+                </a>
+                <button class="btn btn-default" data-dismiss="modal" style="margin-left:10px;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="{{url_for('static', filename='homepage.js')}}"></script>
 
 </body>
