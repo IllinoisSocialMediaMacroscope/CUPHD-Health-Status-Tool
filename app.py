@@ -113,7 +113,7 @@ def callback():
 @login_required
 def logout():
      logout_user()
-     return redirect(url_for("homepage"))
+     return redirect(app.config["ISSUER_URL"] + "/idp/profile/Logout")
 
 @app.route('/', methods=['GET'])
 def homepage():
