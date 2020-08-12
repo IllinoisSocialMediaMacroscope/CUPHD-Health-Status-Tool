@@ -142,7 +142,7 @@ def search():
                          }
                     }
                else:
-                    abort (500, data['message'])
+                    abort (500, 'Access API - ' + data['message'])
           else:
                abort(400, 'UIN is a required field!')
      else:
@@ -158,9 +158,9 @@ def quarantine():
                access_control_status, access_control_data = update_access_status(uin=uin, allowAccess="false")
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="quarantine")
                if not REDCap_status:
-                    abort(500, REDCap_data['message'])
+                    abort(500, 'REDCap API - ' +REDCap_data['message'])
                elif not access_control_status:
-                    abort(500, access_control_data['message'])
+                    abort(500, 'Access API - ' + access_control_data['message'])
                else:
                     return {
                          "user": {
@@ -187,9 +187,9 @@ def isolate():
                access_control_status, access_control_data = update_access_status(uin=uin, allowAccess="false")
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="isolate")
                if not REDCap_status:
-                    abort(500, REDCap_data['message'])
+                    abort(500, 'REDCap API - ' +REDCap_data['message'])
                elif access_control_status:
-                    abort(500, access_control_data['message'])
+                    abort(500, 'Access API - ' + access_control_data['message'])
                else:
                     return {
                          "user": {
@@ -215,9 +215,9 @@ def release():
                access_control_status, access_control_data = update_access_status(uin=uin, allowAccess="true")
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="release")
                if not REDCap_status:
-                    abort(500, REDCap_data['message'])
+                    abort(500, 'REDCap API - ' + REDCap_data['message'])
                elif access_control_status:
-                    abort(500, access_control_data['message'])
+                    abort(500, 'Access API - ' + access_control_data['message'])
                else:
                     return {
                          "user": {
