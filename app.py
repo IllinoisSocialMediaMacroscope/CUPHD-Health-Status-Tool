@@ -187,7 +187,7 @@ def isolate():
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="isolate")
                if not REDCap_status:
                     abort(500, 'REDCap API - ' +REDCap_data['message'])
-               elif access_control_status:
+               elif not access_control_status:
                     abort(500, 'Access API - ' + access_control_data['message'])
                else:
                     return {
@@ -215,7 +215,7 @@ def release():
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="release")
                if not REDCap_status:
                     abort(500, 'REDCap API - ' + REDCap_data['message'])
-               elif access_control_status:
+               elif not access_control_status:
                     abort(500, 'Access API - ' + access_control_data['message'])
                else:
                     return {

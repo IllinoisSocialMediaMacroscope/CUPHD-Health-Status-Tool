@@ -68,8 +68,8 @@ $("#release").on("click", function(){
 // update the status of the searched user (pink area)
 function updateCurrentStatus(user) {
     $("#current-status").show().empty().append(
-        `<h4>` + user["given_name"] + ", " + user["family_name"] + `</h4>
-        <h4>UIN: ` + user["uin"] + `</h4>
+        // `<h4>` + user["given_name"] + ", " + user["family_name"] + `</h4>
+        `<h4>UIN: ` + user["uin"] + `</h4>
         <p>Current Entry Status = ` + user["status"] + `</p>`
     );
 }
@@ -86,8 +86,7 @@ function submitActions(action){
                 "uin": uin
             }),
             success: function (data) {
-                 alert("Successfully "+ action  + " the current user: " + data["user"]["given_name"] + ", "
-                + data["user"]["family_name"] +"!")
+                 alert("Successfully "+ action  + " the current user: " + data["user"]["uin"] + "!")
                 updateCurrentStatus(data.user)
             },
             error: function (jqXHR, exception) {
