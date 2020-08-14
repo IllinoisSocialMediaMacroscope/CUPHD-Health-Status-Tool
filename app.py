@@ -154,7 +154,7 @@ def quarantine():
 
           if request.get_json() and request.get_json()['uin']:
                uin = request.get_json()['uin']
-               access_control_status, access_control_data = update_access_status(uin=uin, allowAccess="false")
+               access_control_status, access_control_data = update_access_status(uin=uin, allowAccess=False)
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="quarantine")
                if not REDCap_status:
                     abort(500, 'REDCap API - ' +REDCap_data['message'])
@@ -183,7 +183,7 @@ def isolate():
 
           if request.get_json() and request.get_json()['uin']:
                uin = request.get_json()['uin']
-               access_control_status, access_control_data = update_access_status(uin=uin, allowAccess="false")
+               access_control_status, access_control_data = update_access_status(uin=uin, allowAccess=False)
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="isolate")
                if not REDCap_status:
                     abort(500, 'REDCap API - ' +REDCap_data['message'])
@@ -211,7 +211,7 @@ def release():
 
           if request.get_json() and request.get_json()['uin']:
                uin = request.get_json()['uin']
-               access_control_status, access_control_data = update_access_status(uin=uin, allowAccess="true")
+               access_control_status, access_control_data = update_access_status(uin=uin, allowAccess=True)
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="release")
                if not REDCap_status:
                     abort(500, 'REDCap API - ' + REDCap_data['message'])

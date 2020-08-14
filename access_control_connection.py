@@ -17,7 +17,7 @@ def lookup_access_status(uin):
     else:
         return False, {"message": "Cannot connect to Access Control API!"}
 
-def update_access_status(uin, allowAccess: str):
+def update_access_status(uin, allowAccess: bool):
     """
 
     :param uin:
