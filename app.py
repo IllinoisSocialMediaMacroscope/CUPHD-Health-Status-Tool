@@ -102,7 +102,6 @@ def callback():
                                                      authn_method="client_secret_basic")
 
      user_info = client.do_user_info_request(state=authentication_response["state"])
-     print(user_info)
      if user_info["preferred_username"] in app.config["ADMIN_NETID_LIST"]:
           user = User(netid=user_info["preferred_username"])
           login_user(user)
