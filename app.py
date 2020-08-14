@@ -16,6 +16,7 @@ from oic.utils.http_util import Redirect
 
 from REDCap_connection import set_REDCap_status
 from access_control_connection import lookup_access_status, update_access_status
+from tncapi_connection import lookup_name
 from user import User
 
 app = Flask(__name__)
@@ -101,6 +102,7 @@ def callback():
                                                      authn_method="client_secret_basic")
 
      user_info = client.do_user_info_request(state=authentication_response["state"])
+     print(user_info)
      if user_info["preferred_username"] in app.config["ADMIN_NETID_LIST"]:
           user = User(netid=user_info["preferred_username"])
           login_user(user)
@@ -129,19 +131,22 @@ def search():
      if current_user.is_authenticated:
           if request.get_json() and request.get_json()['uin']:
                uin = request.get_json()['uin']
-               status, data = lookup_access_status(uin)
-               if status:
+               access_status, access_data = lookup_access_status(uin)
+               username_status, username_data = lookup_name(uin)
+               if not access_status:
+                    abort(500, 'Access API - ' + access_data['message'])
+               elif not username_status:
+                    abort(500, 'TNC API - ' + username_data['message'])
+               else:
                     return {
                          "user": {
-                              "uin": data['data']["uin"],
-                              "username": "NA",
-                              "given_name": "NA",
-                              "family_name": "NA",
-                              "status": data['data']["allowAccess"]
+                              "uin": access_data['data']["uin"],
+                              "given_name": username_data['data']['firstName'],
+                              "family_name": username_data['data']['lastName'],
+                              "status": access_data['data']["allowAccess"]
                          }
                     }
-               else:
-                    abort (500, 'Access API - ' + data['message'])
+
           else:
                abort(400, 'UIN is a required field!')
      else:
@@ -156,17 +161,19 @@ def quarantine():
                uin = request.get_json()['uin']
                access_control_status, access_control_data = update_access_status(uin=uin, allowAccess=False)
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="quarantine")
+               username_status, username_data = lookup_name(uin)
                if not REDCap_status:
                     abort(500, 'REDCap API - ' +REDCap_data['message'])
                elif not access_control_status:
                     abort(500, 'Access API - ' + access_control_data['message'])
+               elif not username_status:
+                    abort(500, 'TNC API - ' + username_data['message'])
                else:
                     return {
                          "user": {
                               "uin": uin,
-                              "username": "NA",
-                              "given_name": "NA",
-                              "family_name": "NA",
+                              "given_name": username_data['data']['firstName'],
+                              "family_name": username_data['data']['lastName'],
                               "status": access_control_data['data']["allowAccess"]
                          }
                     }
@@ -185,17 +192,19 @@ def isolate():
                uin = request.get_json()['uin']
                access_control_status, access_control_data = update_access_status(uin=uin, allowAccess=False)
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="isolate")
+               username_status, username_data = lookup_name(uin)
                if not REDCap_status:
                     abort(500, 'REDCap API - ' +REDCap_data['message'])
                elif not access_control_status:
                     abort(500, 'Access API - ' + access_control_data['message'])
+               elif not username_status:
+                    abort(500, 'TNC API - ' + username_data['message'])
                else:
                     return {
                          "user": {
                               "uin": uin,
-                              "username": "NA",
-                              "given_name": "NA",
-                              "family_name": "NA",
+                              "given_name": username_data['data']['firstName'],
+                              "family_name": username_data['data']['lastName'],
                               "status": access_control_data['data']["allowAccess"]
                          }
                     }
@@ -213,17 +222,19 @@ def release():
                uin = request.get_json()['uin']
                access_control_status, access_control_data = update_access_status(uin=uin, allowAccess=True)
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="release")
+               username_status, username_data = lookup_name(uin)
                if not REDCap_status:
                     abort(500, 'REDCap API - ' + REDCap_data['message'])
                elif not access_control_status:
                     abort(500, 'Access API - ' + access_control_data['message'])
+               elif not username_status:
+                    abort(500, 'TNC API - ' + username_data['message'])
                else:
                     return {
                          "user": {
                               "uin": uin,
-                              "username": "NA",
-                              "given_name": "NA",
-                              "family_name": "NA",
+                              "given_name": username_data['data']['firstName'],
+                              "family_name": username_data['data']['lastName'],
                               "status": access_control_data['data']["allowAccess"]
                          }
                     }

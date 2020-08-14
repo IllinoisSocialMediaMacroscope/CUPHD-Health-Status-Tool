@@ -67,11 +67,11 @@ $("#release").on("click", function(){
 
 // update the status of the searched user (pink area)
 function updateCurrentStatus(user) {
-    $("#current-status").show().empty().append(
-        // `<h4>` + user["given_name"] + ", " + user["family_name"] + `</h4>
-        `<h4>UIN: ` + user["uin"] + `</h4>
+    $("#current-status").empty().append(
+        `<h4>` + user["given_name"] + ", " + user["family_name"] + `</h4>
+        <h4>UIN: ` + user["uin"] + `</h4>
         <p>Current Entry Status = ` + user["status"] + `</p>`
-    );
+    ).show();
 }
 
 // action buttons
