@@ -5,7 +5,7 @@ import config
 
 def lookup_name(uin):
     headers = {
-        'x-api-key': config.ACCESSCTRL_KEY,
+        'x-api-key': config.TNC_API_KEY,
         'Accept': 'application/json'
     }
 
