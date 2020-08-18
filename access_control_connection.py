@@ -1,6 +1,7 @@
 import requests
 
 import config
+from logging_custom_message import logging_custom_message
 
 
 def lookup_access_status(uin):
@@ -11,6 +12,7 @@ def lookup_access_status(uin):
 
     result = requests.get(config.ACCESSCTRL_API_ENDPOINT + '/' + str(uin), headers=headers)
     if result.status_code == 200:
+        logging_custom_message(result.json())
         return True, {"data": result.json()}
     elif result.status_code == 404:
         return False, {"message": result.json()["message"]}
@@ -37,6 +39,7 @@ def update_access_status(uin, allowAccess: bool):
     result = requests.put(config.ACCESSCTRL_API_ENDPOINT, headers=headers, json=data)
 
     if result.status_code == 200:
+        logging_custom_message(result.json())
         return True, {"data": result.json()}
     elif result.status_code == 404:
         return False, {"message": result.json()['message']}

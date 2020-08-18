@@ -1,6 +1,7 @@
 import requests
 
 import config
+from logging_custom_message import logging_custom_message
 
 
 def lookup_name(uin):
@@ -11,6 +12,7 @@ def lookup_name(uin):
 
     result = requests.get(config.TNC_API_ENDPOINT + '/' + str(uin), headers=headers)
     if result.status_code == 200:
+        logging_custom_message(result.json())
         return True, {"data": result.json()}
     elif result.status_code == 404:
         return False, {"message": result.json()["message"]}

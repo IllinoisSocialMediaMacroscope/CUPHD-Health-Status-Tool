@@ -1,6 +1,4 @@
-import logging
 import os
-from time import gmtime
 
 from flask import Flask, render_template, request, g, abort, redirect, url_for
 from flask_login import (
@@ -20,6 +18,7 @@ from REDCap_connection import set_REDCap_status
 from access_control_connection import lookup_access_status, update_access_status
 from tncapi_connection import lookup_name
 from user import User
+from logging_custom_message import logging_custom_message
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -48,10 +47,6 @@ session = dict()
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# Let's log
-logging.Formatter.converter = gmtime
-log_format ='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s'
-logging.basicConfig(datefmt='%Y-%m-%dT%H:%M:%S', format=log_format, level=logging.INFO)
 
 
 @login_manager.user_loader
@@ -112,7 +107,7 @@ def callback():
      if user_info["preferred_username"] in app.config["ADMIN_NETID_LIST"]:
           user = User(netid=user_info["preferred_username"])
           login_user(user)
-          logging.info("The CUPHD staff who logged in: %s" % user_info["preferred_username"])
+          logging_custom_message(message="The CUPHD staff who logged in: %s" % user_info["preferred_username"])
 
           return redirect(url_for("homepage"))
      else:
@@ -152,7 +147,6 @@ def search():
                          "family_name": username_data['data']['lastName'],
                          "status": access_data['data']["allowAccess"]
                     }
-                    logging.info(user_status_obj)
                     return {"user": user_status_obj}
           else:
                abort(400, 'UIN is a required field!')
@@ -182,7 +176,6 @@ def quarantine():
                          "family_name": username_data['data']['lastName'],
                          "status": access_control_data['data']["allowAccess"]
                     }
-                    logging.info(user_status_obj)
                     return {
                          "user": user_status_obj
                     }
@@ -215,7 +208,6 @@ def isolate():
                          "family_name": username_data['data']['lastName'],
                          "status": access_control_data['data']["allowAccess"]
                     }
-                    logging.info(user_status_obj)
                     return {
                          "user": user_status_obj
                     }
@@ -247,7 +239,6 @@ def release():
                          "family_name": username_data['data']['lastName'],
                          "status": access_control_data['data']["allowAccess"]
                     }
-                    logging.info(user_status_obj)
                     return {
                          "user": user_status_obj
                     }
