@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask import Flask, render_template, request, g, abort, redirect, url_for
@@ -16,6 +17,7 @@ from oic.utils.http_util import Redirect
 
 from REDCap_connection import set_REDCap_status
 from access_control_connection import lookup_access_status, update_access_status
+from time import gmtime
 from tncapi_connection import lookup_name
 from user import User
 
@@ -45,6 +47,11 @@ session = dict()
 # LOGIN management setting
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# Let's log
+logging.Formatter.converter = gmtime
+log_format ='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s'
+logging.basicConfig(datefmt='%Y-%m-%dT%H:%M:%S', format=log_format, level=logging.INFO)
 
 
 @login_manager.user_loader
@@ -105,6 +112,8 @@ def callback():
      if user_info["preferred_username"] in app.config["ADMIN_NETID_LIST"]:
           user = User(netid=user_info["preferred_username"])
           login_user(user)
+          logging.warning("The cuphd staff who logged in: %s" % user_info["preferred_username"])
+
           return redirect(url_for("homepage"))
      else:
           abort(403, "This is an CUPHD administrator only tool. Your NETID need to be preapproved!")
