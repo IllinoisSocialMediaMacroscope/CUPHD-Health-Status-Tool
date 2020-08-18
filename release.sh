@@ -7,10 +7,8 @@ GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 
 if [[ "${GIT_BRANCH}" = "master" ]]; then
     VERSION=${VERSION:-"$(git describe --abbrev=0 --tags)"}
-elif [[ "${GIT_BRANCH}" = "deploy" ]]; then
-    VERSION="stage"
 else
-    exit 0
+    VERSION=${VERSION:-"$(git rev-parse --abbrev-ref HEAD)"}
 fi
 
 aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 779619664536.dkr.ecr.us-east-2.amazonaws.com
