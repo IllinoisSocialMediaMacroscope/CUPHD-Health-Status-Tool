@@ -1,5 +1,6 @@
 import logging
 import os
+from time import gmtime
 
 from flask import Flask, render_template, request, g, abort, redirect, url_for
 from flask_login import (
@@ -17,7 +18,6 @@ from oic.utils.http_util import Redirect
 
 from REDCap_connection import set_REDCap_status
 from access_control_connection import lookup_access_status, update_access_status
-from time import gmtime
 from tncapi_connection import lookup_name
 from user import User
 
@@ -112,7 +112,7 @@ def callback():
      if user_info["preferred_username"] in app.config["ADMIN_NETID_LIST"]:
           user = User(netid=user_info["preferred_username"])
           login_user(user)
-          logging.warning("The cuphd staff who logged in: %s" % user_info["preferred_username"])
+          logging.info("The CUPHD staff who logged in: %s" % user_info["preferred_username"])
 
           return redirect(url_for("homepage"))
      else:
@@ -146,15 +146,14 @@ def search():
                elif not username_status:
                     abort(500, 'TNC API - ' + username_data['message'])
                else:
-                    return {
-                         "user": {
-                              "uin": access_data['data']["uin"],
-                              "given_name": username_data['data']['firstName'],
-                              "family_name": username_data['data']['lastName'],
-                              "status": access_data['data']["allowAccess"]
-                         }
+                    user_status_obj = {
+                         "uin": access_data['data']["uin"],
+                         "given_name": username_data['data']['firstName'],
+                         "family_name": username_data['data']['lastName'],
+                         "status": access_data['data']["allowAccess"]
                     }
-
+                    logging.info(user_status_obj)
+                    return {"user": user_status_obj}
           else:
                abort(400, 'UIN is a required field!')
      else:
@@ -171,19 +170,21 @@ def quarantine():
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="quarantine")
                username_status, username_data = lookup_name(uin)
                if not REDCap_status:
-                    abort(500, 'REDCap API - ' +REDCap_data['message'])
+                    abort(500, 'REDCap API - ' + REDCap_data['message'])
                elif not access_control_status:
                     abort(500, 'Access API - ' + access_control_data['message'])
                elif not username_status:
                     abort(500, 'TNC API - ' + username_data['message'])
                else:
+                    user_status_obj = {
+                         "uin": uin,
+                         "given_name": username_data['data']['firstName'],
+                         "family_name": username_data['data']['lastName'],
+                         "status": access_control_data['data']["allowAccess"]
+                    }
+                    logging.info(user_status_obj)
                     return {
-                         "user": {
-                              "uin": uin,
-                              "given_name": username_data['data']['firstName'],
-                              "family_name": username_data['data']['lastName'],
-                              "status": access_control_data['data']["allowAccess"]
-                         }
+                         "user": user_status_obj
                     }
 
           else:
@@ -208,13 +209,15 @@ def isolate():
                elif not username_status:
                     abort(500, 'TNC API - ' + username_data['message'])
                else:
+                    user_status_obj = {
+                         "uin": uin,
+                         "given_name": username_data['data']['firstName'],
+                         "family_name": username_data['data']['lastName'],
+                         "status": access_control_data['data']["allowAccess"]
+                    }
+                    logging.info(user_status_obj)
                     return {
-                         "user": {
-                              "uin": uin,
-                              "given_name": username_data['data']['firstName'],
-                              "family_name": username_data['data']['lastName'],
-                              "status": access_control_data['data']["allowAccess"]
-                         }
+                         "user": user_status_obj
                     }
           else:
                abort(400, 'UIN is a required field!')
@@ -238,13 +241,15 @@ def release():
                elif not username_status:
                     abort(500, 'TNC API - ' + username_data['message'])
                else:
+                    user_status_obj = {
+                         "uin": uin,
+                         "given_name": username_data['data']['firstName'],
+                         "family_name": username_data['data']['lastName'],
+                         "status": access_control_data['data']["allowAccess"]
+                    }
+                    logging.info(user_status_obj)
                     return {
-                         "user": {
-                              "uin": uin,
-                              "given_name": username_data['data']['firstName'],
-                              "family_name": username_data['data']['lastName'],
-                              "status": access_control_data['data']["allowAccess"]
-                         }
+                         "user": user_status_obj
                     }
           else:
                abort(400, 'UIN is a required field!')

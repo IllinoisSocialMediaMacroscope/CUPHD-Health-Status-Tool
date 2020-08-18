@@ -47,5 +47,5 @@ def update_access_status(uin, allowAccess: bool):
 if __name__ == "__main__":
     print(lookup_access_status(uin="123"))
     print(lookup_access_status(uin="668905810"))
-    print(update_access_status(uin="123", allowAccess="true"))
-    print(update_access_status(uin="668905810", allowAccess="true"))
+    print(update_access_status(uin="123", allowAccess=False))
+    print(update_access_status(uin="668905810", allowAccess=False))
