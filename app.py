@@ -73,7 +73,7 @@ def login():
           "response_type": "code",
           "scope": app.config["SCOPES"],
           "nonce": session["nonce"],
-          "redirect_uri": app.config["REDIRECT_URIS"],
+          "redirect_uri": app.config["REDIRECT_URIS"][0],
           "state":session["state"],
           "claims":claims_request
      }
@@ -97,6 +97,7 @@ def callback():
           "code": code
      }
 
+     print(client)
      token_response = client.do_access_token_request(state=authentication_response["state"], request_args=args,
                                                      authn_method="client_secret_basic")
 
