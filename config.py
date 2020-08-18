@@ -18,6 +18,9 @@ import os
 ISSUER_URL = "https://shibboleth.illinois.edu"
 SCOPES = ["openid", "profile", "email", "offline_access"]  # Other OIDC scopes can be added as needed.
 
+# SESSION
+CUPHD_SECRET_KEY = os.environ["CUPHD_SECRET_KEY"]
+
 # SHIBBOLETH
 CLIENT_ID = os.environ["CLIENT_ID"]
 CLIENT_SECRET = os.environ["CLIENT_SECRET"]

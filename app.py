@@ -21,10 +21,12 @@ from user import User
 from logging_custom_message import logging_custom_message
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
 
 # OIDC setting
 app.config.from_pyfile('config.py', silent=True)
+
+# set secret key for session
+app.secret_key = app.config["CUPHD_SECRET_KEY"]
 
 # create oidc client
 client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
@@ -92,8 +94,8 @@ def callback():
      response = request.environ["QUERY_STRING"]
 
      authentication_response = client.parse_response(AuthorizationResponse, info=response, sformat="urlencoded")
-
      code = authentication_response["code"]
+
      assert authentication_response["state"] == session["state"]
 
      args = {
