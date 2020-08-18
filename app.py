@@ -1,6 +1,4 @@
-import os
-
-from flask import Flask, render_template, request, g, abort, redirect, url_for
+from flask import Flask, session, render_template, request, g, abort, redirect, url_for
 from flask_login import (
      LoginManager,
      login_user,
@@ -16,9 +14,9 @@ from oic.utils.http_util import Redirect
 
 from REDCap_connection import set_REDCap_status
 from access_control_connection import lookup_access_status, update_access_status
+from logging_custom_message import logging_custom_message
 from tncapi_connection import lookup_name
 from user import User
-from logging_custom_message import logging_custom_message
 
 app = Flask(__name__)
 
@@ -43,12 +41,9 @@ info = {
 client_reg = RegistrationResponse(**info)
 client.store_registration_info(client_reg)
 
-session = dict()
-
 # LOGIN management setting
 login_manager = LoginManager()
 login_manager.init_app(app)
-
 
 
 @login_manager.user_loader
@@ -78,7 +73,7 @@ def login():
           "response_type": "code",
           "scope": app.config["SCOPES"],
           "nonce": session["nonce"],
-          "redirect_uri":app.config["REDIRECT_URIS"],
+          "redirect_uri": app.config["REDIRECT_URIS"],
           "state":session["state"],
           "claims":claims_request
      }
