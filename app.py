@@ -40,6 +40,7 @@ info = {
 }
 client_reg = RegistrationResponse(**info)
 client.store_registration_info(client_reg)
+client.redirect_uris = app.config["REDIRECT_URIS"]
 
 # LOGIN management setting
 login_manager = LoginManager()
@@ -49,13 +50,6 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(netid):
      return User.get(netid)
-
-
-@app.teardown_appcontext
-def close_connection(exception):
-     conn = getattr(g, '_database', None)
-     if conn is not None:
-          conn.close()
 
 
 @app.route('/login')
