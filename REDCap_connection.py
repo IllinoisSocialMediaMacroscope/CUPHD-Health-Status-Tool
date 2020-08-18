@@ -34,7 +34,7 @@ def set_REDCap_status(new_uin, new_status):
             match_record["test_status"] = "1"
         elif new_status.lower() == "Isolate".lower():
             match_record["test_status"] = "2"
-        elif new_status.lower() == "Release.lower()":
+        elif new_status.lower() == "Release".lower():
             match_record["test_status"] = "3"
         import_json = json.dumps(match_record)
 
@@ -53,7 +53,7 @@ def set_REDCap_status(new_uin, new_status):
         overwrite_request = requests.post(config.REDCAP_API_ENDPOINT, data=data)
         if overwrite_request.status_code == 200:
             result = overwrite_request.json()
-
+            print(result)
             if result["count"] >= 1:
                 return True, {"data": "Successfully published new status to REDCAP"}
             else:
