@@ -2,7 +2,7 @@
 
 set -e
 
-PROJECT_NAME="cuphd-health-status-service"
+PROJECT_NAME="test-compliance/cuphd-health-status-service"
 GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 
 if [[ "${GIT_BRANCH}" = "master" ]]; then
@@ -11,10 +11,10 @@ else
     VERSION=${VERSION:-"$(git rev-parse --abbrev-ref HEAD)"}
 fi
 
-aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 779619664536.dkr.ecr.us-east-2.amazonaws.com
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 225486102836.dkr.ecr.us-east-2.amazonaws.com
 
 docker build -f Dockerfile -t ${PROJECT_NAME}:${VERSION} .
-docker tag ${PROJECT_NAME}:${VERSION} 779619664536.dkr.ecr.us-east-2.amazonaws.com/${PROJECT_NAME}:${VERSION}
-docker push 779619664536.dkr.ecr.us-east-2.amazonaws.com/${PROJECT_NAME}:${VERSION}
+docker tag ${PROJECT_NAME}:${VERSION} 225486102836.dkr.ecr.us-east-2.amazonaws.com/${PROJECT_NAME}:${VERSION}
+docker push 225486102836.dkr.ecr.us-east-2.amazonaws.com/${PROJECT_NAME}:${VERSION}
 
 # 430229884637 for srti lab AWS
