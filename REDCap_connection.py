@@ -54,8 +54,8 @@ def set_REDCap_status(new_uin, new_status):
         overwrite_request = requests.post(config.REDCAP_API_ENDPOINT, data=data)
         if overwrite_request.status_code == 200:
             result = overwrite_request.json()
-            logging_custom_message(overwrite_request.json())
             if result["count"] >= 1:
+                logging_custom_message({"data": "Successfully published new status to REDCAP"})
                 return True, {"data": "Successfully published new status to REDCAP"}
             else:
                 return False, {"message":"Cannot publish new status to REDCAP"}
