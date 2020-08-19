@@ -127,6 +127,7 @@ def search():
                uin = request.get_json()['uin']
                access_status, access_data = lookup_access_status(uin)
                username_status, username_data = lookup_name(uin)
+               logging_custom_message(message="User name found at TNC: %s" % username_data)
                if not access_status:
                     abort(500, 'Access API - ' + access_data['message'])
                elif not username_status:
