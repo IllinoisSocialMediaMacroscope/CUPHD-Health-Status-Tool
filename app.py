@@ -98,7 +98,6 @@ def callback():
      if user_info["preferred_username"] in app.config["ADMIN_NETID_LIST"]:
           user = User(netid=user_info["preferred_username"])
           login_user(user)
-          logging_custom_message(message="The CUPHD staff who logged in: %s" % user_info["preferred_username"])
 
           return redirect(url_for("homepage"))
      else:
