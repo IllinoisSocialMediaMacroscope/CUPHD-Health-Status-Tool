@@ -31,5 +31,6 @@ def update_test_status(uin, test_status):
     else:
         print(f"Request failed with status_code: {request.status_code}")
 
+
 if __name__ == "__main__":
     update_test_status(uin="333333333", test_status="isolate1")
