@@ -98,7 +98,6 @@ def callback():
      if "uiucedu_is_member_of" in user_info.keys() and user_info["uiucedu_is_member_of"] == app.config["ROLE"]:
           user = User(netid=user_info["preferred_username"])
           login_user(user)
-          logging_custom_message(message="The CUPHD staff who logged in: %s" % user_info["preferred_username"])
 
           return redirect(url_for("homepage"))
      else:
@@ -127,6 +126,7 @@ def search():
                uin = request.get_json()['uin']
                access_status, access_data = lookup_access_status(uin)
                username_status, username_data = lookup_name(uin)
+               logging_custom_message(message="User name found at TNC: %s" % username_data)
                if not access_status:
                     abort(500, 'Access API - ' + access_data['message'])
                elif not username_status:
