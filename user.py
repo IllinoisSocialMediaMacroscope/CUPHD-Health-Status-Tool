@@ -1,7 +1,5 @@
 from flask_login import UserMixin
 
-from config import ADMIN_NETID_LIST
-
 
 class User(UserMixin):
 
