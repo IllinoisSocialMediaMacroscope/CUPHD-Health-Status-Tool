@@ -95,7 +95,7 @@ def callback():
                                                      authn_method="client_secret_basic")
 
      user_info = client.do_user_info_request(state=authentication_response["state"])
-     if "uiucedu_is_member_of" in user_info.keys() and user_info["uiucedu_is_member_of"] == app.config["ROLE"]:
+     if "uiucedu_is_member_of" in user_info.keys() and app.config["ROLE"] in user_info["uiucedu_is_member_of"]:
           user = User(netid=user_info["preferred_username"])
           login_user(user)
 
