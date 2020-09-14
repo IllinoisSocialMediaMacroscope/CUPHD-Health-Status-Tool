@@ -25,7 +25,7 @@ CUPHD_SECRET_KEY = os.environ["CUPHD_SECRET_KEY"]
 CLIENT_ID = os.environ["CLIENT_ID"]
 CLIENT_SECRET = os.environ["CLIENT_SECRET"]
 REDIRECT_URIS = [os.environ["REDIRECT_URIS"]]
-ADMIN_NETID_LIST = os.environ["ADMIN_NETID_LIST"].split(",")
+ROLE = os.environ["ROLE"]
 
 # REDCAP
 REDCAP_TOKEN = os.environ["REDCAP_TOKEN"]

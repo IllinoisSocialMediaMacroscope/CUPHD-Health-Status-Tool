@@ -13,9 +13,5 @@ class User(UserMixin):
 
     @staticmethod
     def get(netid):
-        if netid not in ADMIN_NETID_LIST:
-            user = None
-        else:
-            user = User(netid=netid)
-
+        user = User(netid=netid)
         return user
