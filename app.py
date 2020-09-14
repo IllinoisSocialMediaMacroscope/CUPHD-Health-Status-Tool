@@ -98,6 +98,8 @@ def callback():
      if "uiucedu_is_member_of" in user_info.keys() and app.config["ROLE"] in user_info["uiucedu_is_member_of"]:
           user = User(netid=user_info["preferred_username"])
           login_user(user)
+          logging_custom_message(
+              {"message": f"Login user: {user_info['preferred_username']}"})
 
           return redirect(url_for("homepage"))
      else:
