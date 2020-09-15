@@ -21,16 +21,16 @@ def update_test_status(uin, test_status):
         print(f"Test status, {test_status} doesn't exist")
         return
     
-    endpoint = config.REDCAP_API_ENDPOINT + "/" + uin
-    headers = {"Authorization": "xyz"}
+    endpoint = config.QIR_API_ENDPOINT + "/" + uin
+    headers = {"Authorization": config.QIR_API_KEY}
     request = requests.put(endpoint, json=data, headers=headers)
     
     if request.status_code == 200:
-        result = request.json()
-        print(f'result:{result}')
+        logging_custom_message({"data": "Successfully updated the new status to QIR"})
+        return True, {"data": "Successfully updated the new test status to QIR"}
     else:
-        print(f"Request failed with status_code: {request.status_code}")
+        return False, {"message":"Cannot update the new test status to QIR"}
 
 
 if __name__ == "__main__":
-    update_test_status(uin="333333333", test_status="isolate1")
+    update_test_status(uin="333333333", test_status="isolate")

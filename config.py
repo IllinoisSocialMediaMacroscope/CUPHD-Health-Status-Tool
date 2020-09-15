@@ -31,6 +31,10 @@ ROLE = os.environ["ROLE"]
 REDCAP_TOKEN = os.environ["REDCAP_TOKEN"]
 REDCAP_API_ENDPOINT = os.environ["REDCAP_API_ENDPOINT"]
 
+# New QIR
+QIR_API_ENDPOINT = os.environ["QIR_API_ENDPOINT"]
+QIR_API_KEY = os.environ["QIR_API_KEY"]
+
 # ACCESS CONTROL
 ACCESSCTRL_KEY = os.environ["ACCESSCTRL_KEY"]
 TNC_API_KEY = os.environ["TNC_API_KEY"]

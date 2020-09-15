@@ -13,6 +13,7 @@ from oic.utils.authn.client import CLIENT_AUTHN_METHOD
 from oic.utils.http_util import Redirect
 
 from REDCap_connection import set_REDCap_status
+from qirapi_connection import update_test_status
 from access_control_connection import lookup_access_status, update_access_status
 from logging_custom_message import logging_custom_message
 from tncapi_connection import lookup_name
@@ -155,9 +156,12 @@ def quarantine():
                uin = request.get_json()['uin']
                access_control_status, access_control_data = update_access_status(uin=uin, allowAccess=False)
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="quarantine")
+               qir_status, qir_data = update_test_status(uin=uin, test_status="quarantine")
                username_status, username_data = lookup_name(uin)
                if not REDCap_status:
                     abort(500, 'REDCap API - ' + REDCap_data['message'])
+               if not qir_status:
+                    abort(500, 'QIR API - ' + qir_data['message'])
                elif not access_control_status:
                     abort(500, 'Access API - ' + access_control_data['message'])
                elif not username_status:
@@ -187,9 +191,12 @@ def isolate():
                uin = request.get_json()['uin']
                access_control_status, access_control_data = update_access_status(uin=uin, allowAccess=False)
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="isolate")
+               qir_status, qir_data = update_test_status(uin=uin, test_status="isolate")
                username_status, username_data = lookup_name(uin)
                if not REDCap_status:
-                    abort(500, 'REDCap API - ' +REDCap_data['message'])
+                    abort(500, 'REDCap API - ' +REDCap_data['message']) 
+               if not qir_status:
+                    abort(500, 'QIR API - ' +qir_data['message'])
                elif not access_control_status:
                     abort(500, 'Access API - ' + access_control_data['message'])
                elif not username_status:
@@ -218,9 +225,12 @@ def release():
                uin = request.get_json()['uin']
                access_control_status, access_control_data = update_access_status(uin=uin, allowAccess=True)
                REDCap_status, REDCap_data = set_REDCap_status(new_uin=uin, new_status="release")
+               qir_status, qir_data = update_test_status(uin=uin, test_status="release")
                username_status, username_data = lookup_name(uin)
                if not REDCap_status:
                     abort(500, 'REDCap API - ' + REDCap_data['message'])
+               if not qir_status:
+                    abort(500, 'QIR API - ' + qir_data['message'])
                elif not access_control_status:
                     abort(500, 'Access API - ' + access_control_data['message'])
                elif not username_status:
