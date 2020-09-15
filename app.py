@@ -95,9 +95,11 @@ def callback():
                                                      authn_method="client_secret_basic")
 
      user_info = client.do_user_info_request(state=authentication_response["state"])
-     if user_info["preferred_username"] in app.config["ADMIN_NETID_LIST"]:
+     if "uiucedu_is_member_of" in user_info.keys() and app.config["ROLE"] in user_info["uiucedu_is_member_of"]:
           user = User(netid=user_info["preferred_username"])
           login_user(user)
+          logging_custom_message(
+              {"message": f"Login user: {user_info['preferred_username']}"})
 
           return redirect(url_for("homepage"))
      else:

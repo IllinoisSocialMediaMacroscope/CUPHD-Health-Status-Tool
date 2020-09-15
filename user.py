@@ -1,7 +1,5 @@
 from flask_login import UserMixin
 
-from config import ADMIN_NETID_LIST
-
 
 class User(UserMixin):
 
@@ -13,9 +11,5 @@ class User(UserMixin):
 
     @staticmethod
     def get(netid):
-        if netid not in ADMIN_NETID_LIST:
-            user = None
-        else:
-            user = User(netid=netid)
-
+        user = User(netid=netid)
         return user
