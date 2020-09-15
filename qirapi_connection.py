@@ -33,4 +33,4 @@ def update_test_status(uin, test_status):
 
 
 if __name__ == "__main__":
-    update_test_status(uin="333333333", test_status="isolate")
+    print(update_test_status(uin="664937428", test_status="isolate"))
