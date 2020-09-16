@@ -21,7 +21,11 @@ def update_test_status(uin, test_status):
         print(f"Test status, {test_status} doesn't exist")
         return
     
-    endpoint = config.QIR_API_ENDPOINT + uin
+    if config.QIR_API_ENDPOINT.endswith('/'):
+        endpoint = config.QIR_API_ENDPOINT + uin
+    else:
+        endpoint = config.QIR_API_ENDPOINT + '/' + uin
+
     headers = {"Authorization": config.QIR_API_KEY}
     request = requests.put(endpoint, json=data, headers=headers)
     
