@@ -27,8 +27,11 @@ def update_test_status(uin, test_status):
         endpoint = config.QIR_API_ENDPOINT + '/' + uin
 
     headers = {"Authorization": config.QIR_API_KEY}
-    request = requests.put(endpoint, json=data, headers=headers)
-    
+    try:
+        request = requests.put(endpoint, json=data, headers=headers)
+    except Exception as ex:
+        return False, {"message": str(ex)}
+ 
     if request.status_code == 200:
         logging_custom_message({"data": "Successfully updated the new status to QIR"})
         return True, {"data": "Successfully updated the new test status to QIR"}
