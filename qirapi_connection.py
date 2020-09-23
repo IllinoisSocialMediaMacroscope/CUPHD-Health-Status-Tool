@@ -2,6 +2,7 @@ import config
 import json
 import requests
 
+from datetime import date
 from logging_custom_message import logging_custom_message
 
 
@@ -15,7 +16,9 @@ def update_test_status(uin, test_status):
     data = {}
     try:
         data = {
-            "test_status": test_status_dict[test_status] 
+            "test_status": test_status_dict[test_status],
+            "update_date": date.today().strftime("%Y-%m-%d")
+
         }
     except KeyError as ke:
         print(f"Test status, {test_status} doesn't exist")
